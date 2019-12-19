@@ -289,6 +289,15 @@ public class PerformanceTestBuilder extends Builder implements SimpleBuildStep,S
     @Symbol({"performanceTestBuilder", "perfTestBuilder"})
     @Extension // This indicates to Jenkins that this is an implementation of an extension point.
     public static final class DescriptorImpl extends BuildStepDescriptor<Builder> {
+
+        private String defaultPerfchartsCommand = "docker run --net=host --rm -v $WORKSPACE:/data:rw docker-registry.upshift.redhat.com/errata-qe-test/perfci-agent:3.2 perfcharts";
+        private String defaultJmeterCommand = "docker run --net=host --rm -v $WORKSPACE:/data:rw -w $PERFCI_WORKING_DIR docker-registry.upshift.redhat.com/errata-qe-test/perfci-agent:3.2 jmeter";
+        private boolean defaultDisabled = false;
+        private boolean defaultNoAutoJTL = false;
+        private String defaultJmeterArgs = "-Djmeter.save.saveservice.output_format=xml";
+        private String defaultJmxIncludingPattern = "*.jmx";
+        private String defaultJmxExcludingPattern = "";
+        private String nmonSSHKeys = "\"$HOME\"/.ssh/id_rsa,\"$HOME\"/.ssh/id_dsa";
         /**
          * In order to load the persisted global configuration, you have to
          * call load() in the constructor.
@@ -312,6 +321,14 @@ public class PerformanceTestBuilder extends Builder implements SimpleBuildStep,S
 
         @Override
         public boolean configure(StaplerRequest req, JSONObject formData) throws FormException {
+            defaultPerfchartsCommand = formData.getString("defaultPerfchartsCommand");
+            defaultJmeterCommand = formData.getString("defaultJmeterCommand");
+            defaultDisabled = formData.getBoolean("disabled");
+            defaultNoAutoJTL = formData.getBoolean("noAutoJTL");
+            defaultJmeterArgs = formData.getString("jmeterArgs");
+            defaultJmxIncludingPattern = formData.getString("jmxIncludingPattern");
+            defaultJmxExcludingPattern = formData.getString("jmxExcludingPattern");
+            nmonSSHKeys = "\"$HOME\"/.ssh/id_rsa,\"$HOME\"/.ssh/id_dsa";
             save();
             return super.configure(req, formData);
         }
@@ -333,6 +350,70 @@ public class PerformanceTestBuilder extends Builder implements SimpleBuildStep,S
         public ListBoxModel doFillReportTemplateItems() {
             return new ListBoxModel(new ListBoxModel.Option("Performance baseline test", "perf-baseline"),
                     new ListBoxModel.Option("General purpose performance test", "perf-general"));
+        }
+
+        public String getDefaultPerfchartsCommand() {
+            return defaultPerfchartsCommand;
+        }
+
+        public void setDefaultPerfchartsCommand(String defaultPerfchartsCommand) {
+            this.defaultPerfchartsCommand = defaultPerfchartsCommand;
+        }
+
+        public String getDefaultJmeterCommand() {
+            return defaultJmeterCommand;
+        }
+
+        public void setDefaultJmeterCommand(String defaultJmeterCommand) {
+            this.defaultJmeterCommand = defaultJmeterCommand;
+        }
+
+        public boolean isDefaultDisabled() {
+            return defaultDisabled;
+        }
+
+        public void setDefaultDisabled(boolean defaultDisabled) {
+            this.defaultDisabled = defaultDisabled;
+        }
+
+        public boolean isDefaultNoAutoJTL() {
+            return defaultNoAutoJTL;
+        }
+
+        public void setDefaultNoAutoJTL(boolean defaultNoAutoJTL) {
+            this.defaultNoAutoJTL = defaultNoAutoJTL;
+        }
+
+        public String getDefaultJmeterArgs() {
+            return defaultJmeterArgs;
+        }
+
+        public void setDefaultJmeterArgs(String defaultJmeterArgs) {
+            this.defaultJmeterArgs = defaultJmeterArgs;
+        }
+
+        public String getDefaultJmxIncludingPattern() {
+            return defaultJmxIncludingPattern;
+        }
+
+        public void setDefaultJmxIncludingPattern(String defaultJmxIncludingPattern) {
+            this.defaultJmxIncludingPattern = defaultJmxIncludingPattern;
+        }
+
+        public String getDefaultJmxExcludingPattern() {
+            return defaultJmxExcludingPattern;
+        }
+
+        public void setDefaultJmxExcludingPattern(String defaultJmxExcludingPattern) {
+            this.defaultJmxExcludingPattern = defaultJmxExcludingPattern;
+        }
+
+        public String getNmonSSHKeys() {
+            return nmonSSHKeys;
+        }
+
+        public void setNmonSSHKeys(String nmonSSHKeys) {
+            this.nmonSSHKeys = nmonSSHKeys;
         }
     }
 
