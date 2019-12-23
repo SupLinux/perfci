@@ -11,9 +11,12 @@ import hudson.model.TaskListener;
 import hudson.remoting.Callable;
 import hudson.util.FormValidation;
 import org.apache.tools.ant.types.Commandline;
+import org.jenkinsci.Symbol;
 import org.jenkinsci.plugins.perfci.common.BaseDirectoryRelocatable;
 import org.jenkinsci.plugins.perfci.common.LogDirectoryRelocatable;
 import org.jenkinsci.remoting.RoleChecker;
+import org.kohsuke.accmod.Restricted;
+import org.kohsuke.accmod.restrictions.NoExternalUse;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 
@@ -30,17 +33,16 @@ import java.util.*;
 public class JmeterPerformanceTester extends PerformanceTester implements LogDirectoryRelocatable, BaseDirectoryRelocatable {
     private String logDirectory;
     private String baseDirectory;
-    private boolean disabled;
-    private boolean noAutoJTL;
+    private boolean disabled = false;
+    private boolean noAutoJTL = false;
     /**
      * ANT-style wildcards
      */
-    private String jmxIncludingPattern;
-    private String jmxExcludingPattern;
-    private String jmeterCommand;
-    private String jmeterArgs;
+    private String jmxIncludingPattern = "*.jmx";
+    private String jmxExcludingPattern = "";
+    private String jmeterCommand = "docker run --net=host --rm -v /var/lib/jenkins/workspace/P2:/data:rw -w /data/$PERFCI_WORKING_DIR docker-registry.upshift.redhat.com/errata-qe-test/perfci-agent:3.2 jmeter";
+    private String jmeterArgs = "-Djmeter.save.saveservice.output_format=xml";
 
-    @DataBoundConstructor
     public JmeterPerformanceTester(boolean disabled, boolean noAutoJTL, String jmxIncludingPattern, String jmxExcludingPattern, String jmeterCommand, String jmeterArgs) {
         this.disabled = disabled;
         this.noAutoJTL = noAutoJTL;
@@ -48,6 +50,11 @@ public class JmeterPerformanceTester extends PerformanceTester implements LogDir
         this.jmxExcludingPattern = jmxExcludingPattern;
         this.jmeterCommand = jmeterCommand;
         this.jmeterArgs = jmeterArgs;
+    }
+
+    @DataBoundConstructor
+    public JmeterPerformanceTester(String jmxIncludingPattern){
+        this.jmxIncludingPattern = jmxIncludingPattern;
     }
 
     public void run(final Run<?, ?> build, FilePath workspace,final Launcher launcher, final TaskListener listener) throws IOException, InterruptedException {
@@ -214,6 +221,7 @@ public class JmeterPerformanceTester extends PerformanceTester implements LogDir
         this.noAutoJTL = noAutoJTL;
     }
 
+    @Symbol("jmeterperftester")
     @Extension
     public static class DescriptorImpl extends PerformanceTester.PerformanceTesterDescriptor {
         @Override
