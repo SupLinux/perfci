@@ -20,6 +20,8 @@ import org.jenkinsci.plugins.perfci.executor.PerfchartsNewExecutor;
 import org.jenkinsci.plugins.perfci.model.PerformanceTester;
 import org.jenkinsci.plugins.perfci.model.ResourceMonitor;
 import org.jenkinsci.remoting.RoleChecker;
+import org.kohsuke.accmod.Restricted;
+import org.kohsuke.accmod.restrictions.NoExternalUse;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
 import org.kohsuke.stapler.StaplerRequest;
@@ -34,18 +36,18 @@ import java.util.*;
  * Created by vfreex on 11/23/15.
  */
 public class PerformanceTestBuilder extends Builder implements SimpleBuildStep,Serializable {
-    private boolean disabled;
-    private String resultDir;
-    private int keepBuilds;
-    private boolean reportDisabled;
-    private String fallbackTimezone;
-    private List<PerformanceTester> performanceTesters;
-    private List<ResourceMonitor> resourceMonitors;
-    private String perfchartsCommand;
-    private String excludedTransactionPattern;
-    private String reportTemplate;
+    private boolean disabled = false;
+    private String resultDir = "perf-out";
+    private int keepBuilds = 5;
+    private boolean reportDisabled = false;
+    private String fallbackTimezone = "UTC";
+    private List<PerformanceTester> performanceTesters = Collections.<PerformanceTester>emptyList();
+    private List<ResourceMonitor> resourceMonitors = Collections.<ResourceMonitor>emptyList();
+    private String perfchartsCommand = "docker run --net=host --rm -v /var/lib/jenkins/workspace/P2:/data:rw docker-registry.upshift.redhat.com/errata-qe-test/perfci-agent:3.2 perfcharts";
+    private String excludedTransactionPattern = "";
+    private String reportTemplate = "perf-baseline";
 
-    @DataBoundConstructor
+
     public PerformanceTestBuilder(boolean disabled, String resultDir, int keepBuilds, boolean reportDisabled, String fallbackTimezone, List<PerformanceTester> performanceTesters, List<ResourceMonitor> resourceMonitors, String perfchartsCommand, String excludedTransactionPattern, String reportTemplate) {
         this.disabled = disabled;
         this.resultDir = resultDir;
@@ -57,6 +59,11 @@ public class PerformanceTestBuilder extends Builder implements SimpleBuildStep,S
         this.reportTemplate = reportTemplate;
         this.performanceTesters = performanceTesters != null ? performanceTesters : Collections.<PerformanceTester>emptyList();
         this.resourceMonitors = resourceMonitors != null ? resourceMonitors : Collections.<ResourceMonitor>emptyList();
+    }
+
+    @DataBoundConstructor
+    public PerformanceTestBuilder(List<PerformanceTester> performanceTesters){
+        this.performanceTesters = performanceTesters;
     }
 
     @Override
