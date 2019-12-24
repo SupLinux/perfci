@@ -63,7 +63,7 @@ public class PerformanceTestBuilder extends Builder implements SimpleBuildStep,S
 
     @DataBoundConstructor
     public PerformanceTestBuilder(List<PerformanceTester> performanceTesters){
-        this.performanceTesters = performanceTesters;
+        this(false,"perf-out",5,false,"UTC",performanceTesters,Collections.<ResourceMonitor>emptyList(),"docker run --net=host --rm -v $WORKSPACE:/data:rw docker-registry.upshift.redhat.com/errata-qe-test/perfci-agent:3.2 perfcharts","","perf-baseline");
     }
 
     @Override
