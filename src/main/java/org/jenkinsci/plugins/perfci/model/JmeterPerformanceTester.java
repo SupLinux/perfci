@@ -18,6 +18,7 @@ import org.jenkinsci.remoting.RoleChecker;
 import org.kohsuke.accmod.Restricted;
 import org.kohsuke.accmod.restrictions.NoExternalUse;
 import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.DataBoundSetter;
 import org.kohsuke.stapler.QueryParameter;
 
 import java.io.BufferedReader;
@@ -43,6 +44,7 @@ public class JmeterPerformanceTester extends PerformanceTester implements LogDir
     private String jmeterCommand = "docker run --net=host --rm -v /var/lib/jenkins/workspace/P2:/data:rw -w /data/$PERFCI_WORKING_DIR docker-registry.upshift.redhat.com/errata-qe-test/perfci-agent:3.2 jmeter";
     private String jmeterArgs = "-Djmeter.save.saveservice.output_format=xml";
 
+
     public JmeterPerformanceTester(boolean disabled, boolean noAutoJTL, String jmxIncludingPattern, String jmxExcludingPattern, String jmeterCommand, String jmeterArgs) {
         this.disabled = disabled;
         this.noAutoJTL = noAutoJTL;
@@ -54,7 +56,7 @@ public class JmeterPerformanceTester extends PerformanceTester implements LogDir
 
     @DataBoundConstructor
     public JmeterPerformanceTester(String jmxIncludingPattern){
-        this.jmxIncludingPattern = jmxIncludingPattern;
+        this(false,false,jmxIncludingPattern,"","docker run --net=host --rm -v /var/lib/jenkins/workspace/P2:/data:rw -w /data/$PERFCI_WORKING_DIR docker-registry.upshift.redhat.com/errata-qe-test/perfci-agent:3.2 jmeter","-Djmeter.save.saveservice.output_format=xml" );
     }
 
     public void run(final Run<?, ?> build, FilePath workspace,final Launcher launcher, final TaskListener listener) throws IOException, InterruptedException {
@@ -70,8 +72,6 @@ public class JmeterPerformanceTester extends PerformanceTester implements LogDir
 
         final SimpleDateFormat dateFormatForLogName = new SimpleDateFormat("yyyyMMdd-HHmmss", Locale.US);
         dateFormatForLogName.setTimeZone(TimeZone.getTimeZone("GMT"));
-
-
         env.put("PERFCI_WORKING_DIR", new File(workspaceDirFullPath).toPath().relativize(new File(workspaceDirFullPath, resultDir).toPath()).toString());
 
         for (final FilePath file : workspace.list(env.expand(jmxIncludingPattern), env.expand(jmxExcludingPattern))) {
@@ -147,6 +147,7 @@ public class JmeterPerformanceTester extends PerformanceTester implements LogDir
         return jmxIncludingPattern;
     }
 
+    @DataBoundSetter
     public void setJmxIncludingPattern(String jmxIncludingPattern) {
         this.jmxIncludingPattern = jmxIncludingPattern;
     }
@@ -155,6 +156,7 @@ public class JmeterPerformanceTester extends PerformanceTester implements LogDir
         return jmxExcludingPattern;
     }
 
+    @DataBoundSetter
     public void setJmxExcludingPattern(String jmxExcludingPattern) {
         this.jmxExcludingPattern = jmxExcludingPattern;
     }
@@ -163,6 +165,7 @@ public class JmeterPerformanceTester extends PerformanceTester implements LogDir
         return jmeterCommand;
     }
 
+    @DataBoundSetter
     public void setJmeterCommand(String jmeterCommand) {
         this.jmeterCommand = jmeterCommand;
     }
@@ -171,16 +174,22 @@ public class JmeterPerformanceTester extends PerformanceTester implements LogDir
         return jmeterArgs;
     }
 
+    @DataBoundSetter
     public void setJmeterArgs(String jmeterArgs) {
         this.jmeterArgs = jmeterArgs;
     }
 
-    public boolean isDisabled() {
+
+    public boolean getDisabled() {
         return disabled;
     }
-
+    @DataBoundSetter
     public void setDisabled(boolean disabled) {
         this.disabled = disabled;
+    }
+    @DataBoundSetter
+    public void setNoAutoJTL(boolean noAutoJTL) {
+        this.noAutoJTL = noAutoJTL;
     }
 
     @Override
@@ -213,13 +222,11 @@ public class JmeterPerformanceTester extends PerformanceTester implements LogDir
         this.baseDirectory = baseDirectory;
     }
 
-    public boolean isNoAutoJTL() {
+    public boolean getNoAutoJTL() {
         return noAutoJTL;
     }
 
-    public void setNoAutoJTL(boolean noAutoJTL) {
-        this.noAutoJTL = noAutoJTL;
-    }
+
 
     @Symbol("jmeterperftester")
     @Extension
