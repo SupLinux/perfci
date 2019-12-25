@@ -43,7 +43,7 @@ public class PerformanceTestBuilder extends Builder implements SimpleBuildStep,S
     private String fallbackTimezone = "UTC";
     private List<PerformanceTester> performanceTesters = Collections.<PerformanceTester>emptyList();
     private List<ResourceMonitor> resourceMonitors = Collections.<ResourceMonitor>emptyList();
-    private String perfchartsCommand = "docker run --net=host --rm -v /var/lib/jenkins/workspace/P2:/data:rw docker-registry.upshift.redhat.com/errata-qe-test/perfci-agent:3.2 perfcharts";
+    private String perfchartsCommand = Constants.PERFCHARTSCOMMAND;
     private String excludedTransactionPattern = "";
     private String reportTemplate = "perf-baseline";
 
@@ -63,7 +63,7 @@ public class PerformanceTestBuilder extends Builder implements SimpleBuildStep,S
 
     @DataBoundConstructor
     public PerformanceTestBuilder(List<PerformanceTester> performanceTesters){
-        this(false,"perf-out",5,false,"UTC",performanceTesters,Collections.<ResourceMonitor>emptyList(),"docker run --net=host --rm -v $WORKSPACE:/data:rw docker-registry.upshift.redhat.com/errata-qe-test/perfci-agent:3.2 perfcharts","","perf-baseline");
+        this(false,"perf-out",5,false,"UTC",performanceTesters,Collections.<ResourceMonitor>emptyList(),Constants.PERFCHARTSCOMMAND,"","perf-baseline");
     }
 
     @Override

@@ -13,6 +13,7 @@ import hudson.util.FormValidation;
 import org.apache.tools.ant.types.Commandline;
 import org.jenkinsci.Symbol;
 import org.jenkinsci.plugins.perfci.common.BaseDirectoryRelocatable;
+import org.jenkinsci.plugins.perfci.common.Constants;
 import org.jenkinsci.plugins.perfci.common.LogDirectoryRelocatable;
 import org.jenkinsci.remoting.RoleChecker;
 import org.kohsuke.accmod.Restricted;
@@ -39,10 +40,10 @@ public class JmeterPerformanceTester extends PerformanceTester implements LogDir
     /**
      * ANT-style wildcards
      */
-    private String jmxIncludingPattern = "*.jmx";
-    private String jmxExcludingPattern = "";
-    private String jmeterCommand = "docker run --net=host --rm -v /var/lib/jenkins/workspace/P2:/data:rw -w /data/$PERFCI_WORKING_DIR docker-registry.upshift.redhat.com/errata-qe-test/perfci-agent:3.2 jmeter";
-    private String jmeterArgs = "-Djmeter.save.saveservice.output_format=xml";
+    private String jmxIncludingPattern ;
+    private String jmxExcludingPattern ;
+    private String jmeterCommand;
+    private String jmeterArgs;
 
 
     public JmeterPerformanceTester(boolean disabled, boolean noAutoJTL, String jmxIncludingPattern, String jmxExcludingPattern, String jmeterCommand, String jmeterArgs) {
@@ -56,7 +57,7 @@ public class JmeterPerformanceTester extends PerformanceTester implements LogDir
 
     @DataBoundConstructor
     public JmeterPerformanceTester(String jmxIncludingPattern){
-        this(false,false,jmxIncludingPattern,"","docker run --net=host --rm -v /var/lib/jenkins/workspace/P2:/data:rw -w /data/$PERFCI_WORKING_DIR docker-registry.upshift.redhat.com/errata-qe-test/perfci-agent:3.2 jmeter","-Djmeter.save.saveservice.output_format=xml" );
+        this(false,false,jmxIncludingPattern,"",Constants.JMETERCOMMAND,Constants.JMETERARGS );
     }
 
     public void run(final Run<?, ?> build, FilePath workspace,final Launcher launcher, final TaskListener listener) throws IOException, InterruptedException {
@@ -72,8 +73,8 @@ public class JmeterPerformanceTester extends PerformanceTester implements LogDir
 
         final SimpleDateFormat dateFormatForLogName = new SimpleDateFormat("yyyyMMdd-HHmmss", Locale.US);
         dateFormatForLogName.setTimeZone(TimeZone.getTimeZone("GMT"));
+        env.put("WORKSPACE", workspaceDirFullPath);
         env.put("PERFCI_WORKING_DIR", new File(workspaceDirFullPath).toPath().relativize(new File(workspaceDirFullPath, resultDir).toPath()).toString());
-
         for (final FilePath file : workspace.list(env.expand(jmxIncludingPattern), env.expand(jmxExcludingPattern))) {
             launcher.getChannel().call(new Callable<Object, IOException>() {
                 @Override
@@ -100,7 +101,6 @@ public class JmeterPerformanceTester extends PerformanceTester implements LogDir
                     // construct command line arguments for a Jmeter execution
                     final List<String> cmdArgs = new LinkedList<String>();
                     cmdArgs.addAll(Arrays.asList(Commandline.translateCommandline(env.expand(jmeterCommand))));
-
                     // If run test in other ways, such JMeter runs in OpenShift. Just add JMeter test script
                     if(! jmeterCommand.startsWith("docker run")){
                         cmdArgs.add(resultDirObj.toPath().relativize(new File(fileFullPath).toPath()).toString().replace("../",""));
