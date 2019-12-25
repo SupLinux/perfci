@@ -1,5 +1,10 @@
 package org.jenkinsci.plugins.perfci.executor;
 
+import hudson.EnvVars;
+import hudson.FilePath;
+import hudson.Launcher;
+import hudson.model.Run;
+import hudson.model.TaskListener;
 import org.apache.tools.ant.types.Commandline;
 import org.jenkinsci.plugins.perfci.common.IOHelper;
 
@@ -65,7 +70,51 @@ public class PerfchartsNewExecutor extends AbstractExternalProgramExecutor imple
 		*/
         this.excludedTransactionPattern = excludedTransactionPattern;
     }
+    public int run(final Run<?, ?> build, FilePath workspace, final Launcher launcher, final TaskListener listener) throws IOException, InterruptedException {
+        final EnvVars env = build.getEnvironment(listener);
+        final String workspaceDirFullPath = workspace.getRemote();
+        System.out.println(workspaceDirFullPath);
+        env.put("WORKSPACE", workspaceDirFullPath);
+        List<String> arguments = new LinkedList<String>();
+        arguments.addAll(Arrays.asList(Commandline.translateCommandline(env.expand(cgtCommand))));
+        arguments.add("gen");
+        arguments.add(reportType);
+        arguments.add("-d");
+        arguments.add(outputDir);
+        arguments.add("-o");
+        arguments.add(monoReportPath);
+        if (timeZone != null) {
+            arguments.add("-z");
+            arguments.add(timeZone.getID());
+        }
+        if (excludedTransactionPattern != null
+                && !excludedTransactionPattern.isEmpty()) {
+            arguments.add("-e");
+            arguments.add(excludedTransactionPattern);
+        }
+        if (subtitle != null) {
+            arguments.add("--subtitle");
+            arguments.add(subtitle);
+        }
+        arguments.add(inputDir);
 
+        if (redirectedOutput != null)
+            redirectedOutput.println("INFO: PerfchartsBuildReportExecutor - Will exec `" + arguments
+                    + "`");
+
+        ProcessBuilder cgtProcessBuilder = new ProcessBuilder(arguments);
+        if (currentDirectory != null)
+            cgtProcessBuilder.directory(new File(currentDirectory));
+
+        if (redirectedOutput != null)
+            redirectedOutput.println("INFO: PerfchartsBuildReportExecutor - Generating performance test report from '" + inputDir
+                    + "'...");
+        LOGGER.info("Will exec " + arguments);
+        Process cgtProcess = cgtProcessBuilder.start();
+        if (redirectedOutput != null)
+            IOHelper.copySteam(cgtProcess.getErrorStream(), redirectedOutput);
+        return cgtProcess.waitFor();
+    }
     @Override
     public int run() throws IOException, InterruptedException {
         List<String> arguments = new LinkedList<String>();

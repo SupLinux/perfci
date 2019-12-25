@@ -85,7 +85,7 @@ public class PerformanceTestBuilder extends Builder implements SimpleBuildStep,S
         final String baseDirForBuild = buildDir + File.separator + "rawdata";
         final String logDirForBuild = buildDir + File.separator + "log";
         final String reportDirForBuild = buildDir + File.separator + "report";
-        EnvVars env = build.getEnvironment(listener);
+        final EnvVars env = build.getEnvironment(listener);
         final String perfchartsCommand = env.expand(this.perfchartsCommand);
 
         // start resource monitors
@@ -169,7 +169,7 @@ public class PerformanceTestBuilder extends Builder implements SimpleBuildStep,S
 
 
                     try {
-                        if (perfchartsExecutor.run() != 0) {
+                        if (perfchartsExecutor.run(build, workspace, launcher, listener) != 0) {
                             listener.getLogger().println("ERROR: Perfcharts reported an error when generating a performance report.");
                             throw new InterruptedException("Perfcharts reported an error when generating a performance report.");
                         }
