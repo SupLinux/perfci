@@ -330,12 +330,11 @@ public class PerformanceTestBuilder extends Builder implements SimpleBuildStep,S
         public boolean configure(StaplerRequest req, JSONObject formData) throws FormException {
             defaultPerfchartsCommand = formData.getString("defaultPerfchartsCommand");
             defaultJmeterCommand = formData.getString("defaultJmeterCommand");
-            defaultDisabled = formData.getBoolean("disabled");
             defaultNoAutoJTL = formData.getBoolean("noAutoJTL");
             defaultJmeterArgs = formData.getString("jmeterArgs");
             defaultJmxIncludingPattern = formData.getString("jmxIncludingPattern");
             defaultJmxExcludingPattern = formData.getString("jmxExcludingPattern");
-            nmonSSHKeys = "\"$HOME\"/.ssh/id_rsa,\"$HOME\"/.ssh/id_dsa";
+
             save();
             return super.configure(req, formData);
         }
@@ -375,10 +374,6 @@ public class PerformanceTestBuilder extends Builder implements SimpleBuildStep,S
             this.defaultJmeterCommand = defaultJmeterCommand;
         }
 
-        public boolean isDefaultDisabled() {
-            return defaultDisabled;
-        }
-
         public void setDefaultDisabled(boolean defaultDisabled) {
             this.defaultDisabled = defaultDisabled;
         }
@@ -415,13 +410,6 @@ public class PerformanceTestBuilder extends Builder implements SimpleBuildStep,S
             this.defaultJmxExcludingPattern = defaultJmxExcludingPattern;
         }
 
-        public String getNmonSSHKeys() {
-            return nmonSSHKeys;
-        }
-
-        public void setNmonSSHKeys(String nmonSSHKeys) {
-            this.nmonSSHKeys = nmonSSHKeys;
-        }
     }
 
 
