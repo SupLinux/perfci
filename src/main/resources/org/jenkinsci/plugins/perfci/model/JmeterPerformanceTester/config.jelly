@@ -5,17 +5,17 @@
         <f:checkbox />
     </f:entry>
     <f:entry title="inclusion JMX files" field="jmxIncludingPattern">
-        <f:textbox default="**/*.jmx" />
+        <f:textbox default="*${descriptor.defaultJmxIncludingPattern}" />
     </f:entry>
     <f:entry title="exclusion JMX files" field="jmxExcludingPattern">
-        <f:textbox default="" />
+        <f:textbox default="${descriptor.defaultJmxExcludingPattern}" />
     </f:entry>
     <f:advanced>
         <f:entry title="Jmeter command" field="jmeterCommand">
-            <f:textbox default="docker run --rm -v &quot;$WORKSPACE&quot;:/data:rw -w &quot;/data/$PERFCI_WORKING_DIR&quot; 10.73.3.1:5000/perfci-agent jmeter" />
+            <f:textbox default="${descriptor.defaultJmeterCommand}" />
         </f:entry>
         <f:entry title="Jmeter additional arguments" field="jmeterArgs">
-            <f:textbox default="-Djmeter.save.saveservice.output_format=xml" />
+            <f:textbox default="${descriptor.defaultJmeterArgs}" />
         </f:entry>
         <f:entry title="Don't generate a JTL file automatically" field="noAutoJTL">
             <f:checkbox />

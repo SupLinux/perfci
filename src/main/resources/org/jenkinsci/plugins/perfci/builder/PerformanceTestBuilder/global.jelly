@@ -2,9 +2,6 @@
 <j:jelly xmlns:j="jelly:core"
          xmlns:f="/lib/form">
     <f:section title="PerfCI">
-        <f:entry title="Disable" field="disabled">
-            <f:checkbox />
-        </f:entry>
         <f:entry title="Don't generate a JTL file automatically" field="noAutoJTL">
             <f:checkbox />
         </f:entry>
@@ -12,7 +9,7 @@
             <f:textbox default="*.jmx" />
         </f:entry>
         <f:entry title="exclusion JMX files" field="jmxExcludingPattern">
-            <f:textbox default="" />
+            <f:textbox />
         </f:entry>
         <f:entry title="Jmeter additional arguments" field="jmeterArgs">
             <f:textbox default="-Djmeter.save.saveservice.output_format=xml" />
@@ -24,8 +21,6 @@
         <f:entry title="Default Jmeter command" field="defaultJmeterCommand">
             <f:textbox />
         </f:entry>
-        <f:entry title="NMON SSH keys" field="nmonSSHKeys">
-            <f:textbox />
-        </f:entry>
+
     </f:section>
 </j:jelly>

@@ -12,6 +12,7 @@ import hudson.remoting.Callable;
 import hudson.util.FormValidation;
 import org.apache.tools.ant.types.Commandline;
 import org.jenkinsci.Symbol;
+import org.jenkinsci.plugins.perfci.builder.PerformanceTestBuilder;
 import org.jenkinsci.plugins.perfci.common.BaseDirectoryRelocatable;
 import org.jenkinsci.plugins.perfci.common.Constants;
 import org.jenkinsci.plugins.perfci.common.LogDirectoryRelocatable;
@@ -228,9 +229,49 @@ public class JmeterPerformanceTester extends PerformanceTester implements LogDir
 
 
 
-    @Symbol("jmeterperftester")
     @Extension
     public static class DescriptorImpl extends PerformanceTester.PerformanceTesterDescriptor {
+        private String defaultJmxIncludingPattern ;
+        private String defaultJmxExcludingPattern ;
+        private String defaultJmeterCommand;
+        private String defaultJmeterArgs;
+
+        public String getDefaultJmxIncludingPattern() {
+            return new PerformanceTestBuilder.DescriptorImpl().getDefaultJmxIncludingPattern();
+        }
+
+        @DataBoundSetter
+        public void setDefaultJmxIncludingPattern(String defaultJmxIncludingPattern) {
+            this.defaultJmxIncludingPattern = defaultJmxIncludingPattern;
+        }
+
+        public String getDefaultJmxExcludingPattern() {
+            return new PerformanceTestBuilder.DescriptorImpl().getDefaultJmxExcludingPattern();
+        }
+
+        @DataBoundSetter
+        public void setDefaultJmxExcludingPattern(String defaultJmxExcludingPattern) {
+            this.defaultJmxExcludingPattern = defaultJmxExcludingPattern;
+        }
+
+        public String getDefaultJmeterCommand() {
+            return new PerformanceTestBuilder.DescriptorImpl().getDefaultJmeterCommand();
+        }
+
+        @DataBoundSetter
+        public void setDefaultJmeterCommand(String defaultJmeterCommand) {
+            this.defaultJmeterCommand = defaultJmeterCommand;
+        }
+
+        public String getDefaultJmeterArgs() {
+            return new PerformanceTestBuilder.DescriptorImpl().getDefaultJmeterArgs();
+        }
+
+        @DataBoundSetter
+        public void setDefaultJmeterArgs(String defaultJmeterArgs) {
+            this.defaultJmeterArgs = defaultJmeterArgs;
+        }
+
         @Override
         public String getDisplayName() {
             return "Apache Jmeter";
