@@ -2,24 +2,14 @@
 <j:jelly xmlns:j="jelly:core"
          xmlns:f="/lib/form">
     <f:section title="PerfCI">
-        <f:entry title="Don't generate a JTL file automatically" field="noAutoJTL">
-            <f:checkbox />
-        </f:entry>
         <f:entry title="inclusion JMX files" field="jmxIncludingPattern">
             <f:textbox default="*.jmx" />
         </f:entry>
-        <f:entry title="exclusion JMX files" field="jmxExcludingPattern">
-            <f:textbox />
-        </f:entry>
-        <f:entry title="Jmeter additional arguments" field="jmeterArgs">
-            <f:textbox default="-Djmeter.save.saveservice.output_format=xml" />
-        </f:entry>
-
         <f:entry title="Default Perfcharts command" field="defaultPerfchartsCommand">
-            <f:textbox />
+            <f:textbox default="docker run --net=host --rm -v $WORKSPACE:/data:rw docker-registry.upshift.redhat.com/errata-qe-test/perfci-agent:3.2 perfcharts"/>
         </f:entry>
         <f:entry title="Default Jmeter command" field="defaultJmeterCommand">
-            <f:textbox />
+            <f:textbox default="docker run --net=host --rm -v $WORKSPACE:/data:rw -w /data/$PERFCI_WORKING_DIR docker-registry.upshift.redhat.com/errata-qe-test/perfci-agent:3.2 jmeter"/>
         </f:entry>
 
     </f:section>

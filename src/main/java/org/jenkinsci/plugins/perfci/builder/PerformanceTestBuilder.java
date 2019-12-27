@@ -299,11 +299,7 @@ public class PerformanceTestBuilder extends Builder implements SimpleBuildStep,S
 
         private String defaultPerfchartsCommand = "docker run --net=host --rm -v $WORKSPACE:/data:rw docker-registry.upshift.redhat.com/errata-qe-test/perfci-agent:3.2 perfcharts";
         private String defaultJmeterCommand = "docker run --net=host --rm -v $WORKSPACE:/data:rw -w $PERFCI_WORKING_DIR docker-registry.upshift.redhat.com/errata-qe-test/perfci-agent:3.2 jmeter";
-        private boolean defaultDisabled = false;
-        private boolean defaultNoAutoJTL = false;
-        private String defaultJmeterArgs = "-Djmeter.save.saveservice.output_format=xml";
         private String defaultJmxIncludingPattern = "*.jmx";
-        private String defaultJmxExcludingPattern = "";
         private String nmonSSHKeys = "\"$HOME\"/.ssh/id_rsa,\"$HOME\"/.ssh/id_dsa";
         /**
          * In order to load the persisted global configuration, you have to
@@ -330,10 +326,7 @@ public class PerformanceTestBuilder extends Builder implements SimpleBuildStep,S
         public boolean configure(StaplerRequest req, JSONObject formData) throws FormException {
             defaultPerfchartsCommand = formData.getString("defaultPerfchartsCommand");
             defaultJmeterCommand = formData.getString("defaultJmeterCommand");
-            defaultNoAutoJTL = formData.getBoolean("noAutoJTL");
-            defaultJmeterArgs = formData.getString("jmeterArgs");
             defaultJmxIncludingPattern = formData.getString("jmxIncludingPattern");
-            defaultJmxExcludingPattern = formData.getString("jmxExcludingPattern");
 
             save();
             return super.configure(req, formData);
@@ -374,25 +367,6 @@ public class PerformanceTestBuilder extends Builder implements SimpleBuildStep,S
             this.defaultJmeterCommand = defaultJmeterCommand;
         }
 
-        public void setDefaultDisabled(boolean defaultDisabled) {
-            this.defaultDisabled = defaultDisabled;
-        }
-
-        public boolean isDefaultNoAutoJTL() {
-            return defaultNoAutoJTL;
-        }
-
-        public void setDefaultNoAutoJTL(boolean defaultNoAutoJTL) {
-            this.defaultNoAutoJTL = defaultNoAutoJTL;
-        }
-
-        public String getDefaultJmeterArgs() {
-            return defaultJmeterArgs;
-        }
-
-        public void setDefaultJmeterArgs(String defaultJmeterArgs) {
-            this.defaultJmeterArgs = defaultJmeterArgs;
-        }
 
         public String getDefaultJmxIncludingPattern() {
             return defaultJmxIncludingPattern;
@@ -402,13 +376,7 @@ public class PerformanceTestBuilder extends Builder implements SimpleBuildStep,S
             this.defaultJmxIncludingPattern = defaultJmxIncludingPattern;
         }
 
-        public String getDefaultJmxExcludingPattern() {
-            return defaultJmxExcludingPattern;
-        }
 
-        public void setDefaultJmxExcludingPattern(String defaultJmxExcludingPattern) {
-            this.defaultJmxExcludingPattern = defaultJmxExcludingPattern;
-        }
 
     }
 

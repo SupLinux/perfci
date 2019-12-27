@@ -232,9 +232,7 @@ public class JmeterPerformanceTester extends PerformanceTester implements LogDir
     @Extension
     public static class DescriptorImpl extends PerformanceTester.PerformanceTesterDescriptor {
         private String defaultJmxIncludingPattern ;
-        private String defaultJmxExcludingPattern ;
         private String defaultJmeterCommand;
-        private String defaultJmeterArgs;
 
         public String getDefaultJmxIncludingPattern() {
             return new PerformanceTestBuilder.DescriptorImpl().getDefaultJmxIncludingPattern();
@@ -245,14 +243,7 @@ public class JmeterPerformanceTester extends PerformanceTester implements LogDir
             this.defaultJmxIncludingPattern = defaultJmxIncludingPattern;
         }
 
-        public String getDefaultJmxExcludingPattern() {
-            return new PerformanceTestBuilder.DescriptorImpl().getDefaultJmxExcludingPattern();
-        }
 
-        @DataBoundSetter
-        public void setDefaultJmxExcludingPattern(String defaultJmxExcludingPattern) {
-            this.defaultJmxExcludingPattern = defaultJmxExcludingPattern;
-        }
 
         public String getDefaultJmeterCommand() {
             return new PerformanceTestBuilder.DescriptorImpl().getDefaultJmeterCommand();
@@ -263,14 +254,6 @@ public class JmeterPerformanceTester extends PerformanceTester implements LogDir
             this.defaultJmeterCommand = defaultJmeterCommand;
         }
 
-        public String getDefaultJmeterArgs() {
-            return new PerformanceTestBuilder.DescriptorImpl().getDefaultJmeterArgs();
-        }
-
-        @DataBoundSetter
-        public void setDefaultJmeterArgs(String defaultJmeterArgs) {
-            this.defaultJmeterArgs = defaultJmeterArgs;
-        }
 
         @Override
         public String getDisplayName() {

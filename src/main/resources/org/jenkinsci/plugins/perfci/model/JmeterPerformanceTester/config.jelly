@@ -8,14 +8,14 @@
         <f:textbox default="*${descriptor.defaultJmxIncludingPattern}" />
     </f:entry>
     <f:entry title="exclusion JMX files" field="jmxExcludingPattern">
-        <f:textbox default="${descriptor.defaultJmxExcludingPattern}" />
+        <f:textbox default="" />
     </f:entry>
     <f:advanced>
         <f:entry title="Jmeter command" field="jmeterCommand">
             <f:textbox default="${descriptor.defaultJmeterCommand}" />
         </f:entry>
         <f:entry title="Jmeter additional arguments" field="jmeterArgs">
-            <f:textbox default="${descriptor.defaultJmeterArgs}" />
+            <f:textbox default="-Djmeter.save.saveservice.output_format=xml" />
         </f:entry>
         <f:entry title="Don't generate a JTL file automatically" field="noAutoJTL">
             <f:checkbox />
