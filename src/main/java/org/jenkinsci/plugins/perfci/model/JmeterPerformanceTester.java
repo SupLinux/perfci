@@ -57,8 +57,11 @@ public class JmeterPerformanceTester extends PerformanceTester implements LogDir
     }
 
     @DataBoundConstructor
-    public JmeterPerformanceTester(String jmxIncludingPattern){
-        this(false,false,jmxIncludingPattern,"",Constants.JMETERCOMMAND,Constants.JMETERARGS );
+    public JmeterPerformanceTester(){
+        this(false,false,new PerformanceTestBuilder.DescriptorImpl().getDefaultJmxIncludingPattern()
+                , ""
+                ,new PerformanceTestBuilder.DescriptorImpl().getDefaultJmeterCommand()
+                ,Constants.JMETERARGS );
     }
 
     public void run(final Run<?, ?> build, FilePath workspace,final Launcher launcher, final TaskListener listener) throws IOException, InterruptedException {
@@ -228,7 +231,7 @@ public class JmeterPerformanceTester extends PerformanceTester implements LogDir
     }
 
 
-
+    @Symbol("Jmeter")
     @Extension
     public static class DescriptorImpl extends PerformanceTester.PerformanceTesterDescriptor {
         private String defaultJmxIncludingPattern ;

@@ -43,7 +43,7 @@
         </f:entry>
         <f:advanced>
             <f:entry title="Excluded transactions" field="excludedTransactionPattern" description="A regular expression which specifying excluded transactions for average response time and TPS calculation. ex: ping\.html">
-                <f:textbox default=""/>
+                <f:textbox/>
             </f:entry>
             <f:entry title="Perfcharts command" field="perfchartsCommand">
                 <f:textbox default="${descriptor.defaultPerfchartsCommand}" />

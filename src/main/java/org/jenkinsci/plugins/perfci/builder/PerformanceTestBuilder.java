@@ -63,7 +63,9 @@ public class PerformanceTestBuilder extends Builder implements SimpleBuildStep,S
 
     @DataBoundConstructor
     public PerformanceTestBuilder(List<PerformanceTester> performanceTesters){
-        this(false,"perf-out",5,false,"UTC",performanceTesters,Collections.<ResourceMonitor>emptyList(),Constants.PERFCHARTSCOMMAND,"","perf-baseline");
+        this(false,"perf-out",5,false,"UTC",performanceTesters,Collections.<ResourceMonitor>emptyList(),
+                new DescriptorImpl().getDefaultPerfchartsCommand()
+                ,"","perf-baseline");
     }
 
     @Override
