@@ -4,6 +4,7 @@ import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
 import hudson.model.*;
+import org.jenkinsci.Symbol;
 import org.jenkinsci.plugins.perfci.common.ResultDirectoryRelocatable;
 import org.kohsuke.stapler.DataBoundConstructor;
 
@@ -15,6 +16,7 @@ import java.util.UUID;
  * Created by vfreex on 11/27/15.
  */
 public class CloneBuildTester extends PerformanceTester implements ResultDirectoryRelocatable {
+    @Symbol("Clone")
     @Extension
     public static class DescriptorImpl extends PerformanceTester.PerformanceTesterDescriptor {
         @Override
@@ -28,11 +30,16 @@ public class CloneBuildTester extends PerformanceTester implements ResultDirecto
     private int copyBuildID;
     private String includingPattern;
 
-    @DataBoundConstructor
     public CloneBuildTester(boolean disabled, int copyBuildID, String includingPattern) {
         this.disabled = disabled;
         this.copyBuildID = copyBuildID;
         this.includingPattern = includingPattern;
+    }
+
+    @DataBoundConstructor
+    public CloneBuildTester(int copyBuildID) {
+        this(false, copyBuildID, "**/*");
+
     }
 
     @Override

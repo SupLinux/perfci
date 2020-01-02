@@ -16,6 +16,7 @@ import net.schmizz.sshj.connection.channel.direct.Session;
 import net.schmizz.sshj.transport.verification.PromiscuousVerifier;
 import net.schmizz.sshj.xfer.InMemorySourceFile;
 import org.apache.tools.tar.TarEntry;
+import org.jenkinsci.Symbol;
 import org.jenkinsci.plugins.perfci.common.BaseDirectoryRelocatable;
 import org.jenkinsci.remoting.RoleChecker;
 import org.kohsuke.stapler.DataBoundConstructor;
@@ -43,7 +44,6 @@ public class NmonMonitor extends ResourceMonitor implements BaseDirectoryRelocat
 
     // Fields in config.jelly must match the parameter names in the
     // "DataBoundConstructor"
-    @DataBoundConstructor
     public NmonMonitor(String host, String name, String password,
                        String interval, String fingerprint, boolean isDisabled) {
         this.host = host;
@@ -53,6 +53,11 @@ public class NmonMonitor extends ResourceMonitor implements BaseDirectoryRelocat
         this.fingerprint = fingerprint;
         this.isDisabled = isDisabled;
     }
+    @DataBoundConstructor
+    public NmonMonitor(String host, String name, String password){
+        this(host, name, password,"1", "", false );
+    }
+
 
     private static String getOutputDir(String projectName, int buildID) {
         return getBuildDir(projectName, buildID) + "/monitoring";
@@ -390,6 +395,7 @@ public class NmonMonitor extends ResourceMonitor implements BaseDirectoryRelocat
         this.baseDirectory = baseDirectory;
     }
 
+    @Symbol("Nmon")
     @Extension
     public static class DescriptorImpl extends ResourceMonitorDescriptor {
 
