@@ -87,6 +87,9 @@ public class IOHelper {
     }
 
     public static void copyDirFromWorkspace(FilePath src, String pathToBuildDir, Run<?, ?> build, FilePath workspace,TaskListener listener) throws IOException, InterruptedException {
+        if (!src.exists()){
+            src.mkdirs();
+        }
         if (!src.exists() || !src.isDirectory())
             throw new IOException("Directory '" + src.getName() +
                     "' does not exist.");

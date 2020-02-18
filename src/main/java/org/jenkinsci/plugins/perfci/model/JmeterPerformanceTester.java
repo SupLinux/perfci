@@ -61,7 +61,7 @@ public class JmeterPerformanceTester extends PerformanceTester implements LogDir
         this(false,false,new PerformanceTestBuilder.DescriptorImpl().getDefaultJmxIncludingPattern()
                 , ""
                 ,new PerformanceTestBuilder.DescriptorImpl().getDefaultJmeterCommand()
-                ,Constants.JMETERARGS );
+                ,"" );
     }
 
     public void run(final Run<?, ?> build, FilePath workspace,final Launcher launcher, final TaskListener listener) throws IOException, InterruptedException {

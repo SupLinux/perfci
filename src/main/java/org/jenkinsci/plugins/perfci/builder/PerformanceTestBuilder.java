@@ -63,7 +63,7 @@ public class PerformanceTestBuilder extends Builder implements SimpleBuildStep,S
 
     @DataBoundConstructor
     public PerformanceTestBuilder(List<PerformanceTester> performanceTesters){
-        this(false,"perf-out",5,false,"UTC",performanceTesters,Collections.<ResourceMonitor>emptyList(),
+        this(false,"perf-out/",5,false,"UTC",performanceTesters,Collections.<ResourceMonitor>emptyList(),
                 new DescriptorImpl().getDefaultPerfchartsCommand()
                 ,"","perf-baseline");
     }
@@ -152,15 +152,18 @@ public class PerformanceTestBuilder extends Builder implements SimpleBuildStep,S
             listener.getLogger().println("WARNING: No performance test reports will be generated according to your configuration.");
         } else {
             final String workspaceFullPathOnAgent = workspace.getRemote();
+            listener.getLogger().println(workspaceFullPathOnAgent);
+            env.put("workspace", workspaceFullPathOnAgent);
+            listener.getLogger().println(env.expand(perfchartsCommand));
             launcher.getChannel().call(new hudson.remoting.Callable<Object, IOException>() {
                 @Override
                 public void checkRoles(RoleChecker checker) throws SecurityException {
                 }
 
                 @Override
-                public Object call() throws IOException {
+                public Object call() throws IOException{
                     // generate a report
-                    PerfchartsNewExecutor perfchartsExecutor = new PerfchartsNewExecutor(perfchartsCommand,
+                    PerfchartsNewExecutor perfchartsExecutor = new PerfchartsNewExecutor(env.expand(perfchartsCommand),
                             reportTemplate, workspaceFullPathOnAgent,
                             fallbackTimezoneObj,
                             baseDirForBuild,
@@ -171,7 +174,7 @@ public class PerformanceTestBuilder extends Builder implements SimpleBuildStep,S
 
 
                     try {
-                        if (perfchartsExecutor.run(build, workspace, launcher, listener) != 0) {
+                        if (perfchartsExecutor.run() != 0) {
                             listener.getLogger().println("ERROR: Perfcharts reported an error when generating a performance report.");
                             throw new InterruptedException("Perfcharts reported an error when generating a performance report.");
                         }
@@ -299,10 +302,13 @@ public class PerformanceTestBuilder extends Builder implements SimpleBuildStep,S
     @Extension // This indicates to Jenkins that this is an implementation of an extension point.
     public static final class DescriptorImpl extends BuildStepDescriptor<Builder> {
 
-        private String defaultPerfchartsCommand = "docker run --net=host --rm -v $WORKSPACE:/data:rw docker-registry.upshift.redhat.com/errata-qe-test/perfci-agent:3.2 perfcharts";
-        private String defaultJmeterCommand = "docker run --net=host --rm -v $WORKSPACE:/data:rw -w $PERFCI_WORKING_DIR docker-registry.upshift.redhat.com/errata-qe-test/perfci-agent:3.2 jmeter";
-        private String defaultJmxIncludingPattern = "*.jmx";
+//        private String defaultPerfchartsCommand = "docker run --net=host --rm -v $WORKSPACE:/data:rw docker-registry.upshift.redhat.com/errata-qe-test/perfci-agent:3.2 perfcharts";
+        private String defaultPerfchartsCommand = "sh openshift/gen_report.sh $WORKSPACE $BUILD_NUMBER";
+//        private String defaultJmeterCommand = "docker run --net=host --rm -v $WORKSPACE:/data:rw -w $PERFCI_WORKING_DIR docker-registry.upshift.redhat.com/errata-qe-test/perfci-agent:3.2 jmeter";
+        private String defaultJmeterCommand = "sh $WORKSPACE/openshift/run_test.sh $WORKSPACE $BUILD_NUMBER";
+        private String defaultJmxIncludingPattern = "jmx/*.jmx";
         private String nmonSSHKeys = "\"$HOME\"/.ssh/id_rsa,\"$HOME\"/.ssh/id_dsa";
+        private String defultTest ;
         /**
          * In order to load the persisted global configuration, you have to
          * call load() in the constructor.
@@ -326,9 +332,9 @@ public class PerformanceTestBuilder extends Builder implements SimpleBuildStep,S
 
         @Override
         public boolean configure(StaplerRequest req, JSONObject formData) throws FormException {
-            defaultPerfchartsCommand = formData.getString("defaultPerfchartsCommand");
-            defaultJmeterCommand = formData.getString("defaultJmeterCommand");
-            defaultJmxIncludingPattern = formData.getString("jmxIncludingPattern");
+            this.defaultPerfchartsCommand = formData.getString("defaultPerfchartsCommand");
+            this.defaultJmeterCommand = formData.getString("defaultJmeterCommand");
+            this.defaultJmxIncludingPattern = formData.getString("defaultJmxIncludingPattern");
 
             save();
             return super.configure(req, formData);
@@ -377,7 +383,6 @@ public class PerformanceTestBuilder extends Builder implements SimpleBuildStep,S
         public void setDefaultJmxIncludingPattern(String defaultJmxIncludingPattern) {
             this.defaultJmxIncludingPattern = defaultJmxIncludingPattern;
         }
-
 
 
     }

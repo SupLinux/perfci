@@ -5,7 +5,7 @@
         <f:checkbox />
     </f:entry>
     <f:entry title="inclusion JMX files" field="jmxIncludingPattern">
-        <f:textbox default="*${descriptor.defaultJmxIncludingPattern}" />
+        <f:textbox default="${descriptor.defaultJmxIncludingPattern}" />
     </f:entry>
     <f:entry title="exclusion JMX files" field="jmxExcludingPattern">
         <f:textbox default="" />

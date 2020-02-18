@@ -2,8 +2,8 @@
 <j:jelly xmlns:j="jelly:core"
          xmlns:f="/lib/form">
     <f:section title="PerfCI">
-        <f:entry title="inclusion JMX files" field="jmxIncludingPattern">
-            <f:textbox default="*.jmx" />
+        <f:entry title="inclusion JMX files" field="defaultJmxIncludingPattern">
+            <f:textbox default="load/*.jmx" />
         </f:entry>
         <f:entry title="Default Perfcharts command" field="defaultPerfchartsCommand">
             <f:textbox default="docker run --net=host --rm -v $WORKSPACE:/data:rw docker-registry.upshift.redhat.com/errata-qe-test/perfci-agent:3.2 perfcharts"/>
