@@ -107,7 +107,11 @@ public class JmeterPerformanceTester extends PerformanceTester implements LogDir
                     cmdArgs.addAll(Arrays.asList(Commandline.translateCommandline(env.expand(jmeterCommand))));
                     // If run test in other ways, such JMeter runs in OpenShift. Just add JMeter test script
                     if(! jmeterCommand.startsWith("docker run")){
+                        cmdArgs.add(env.get("WORKSPACE"));
+                        cmdArgs.add(env.get("BUILD_NUMBER"));
                         cmdArgs.add(resultDirObj.toPath().relativize(new File(fileFullPath).toPath()).toString().replace("../",""));
+                        cmdArgs.add(jmeterArgs);
+                        cmdArgs.add(env.get("SLAVE_NUMBER"));
                     }else {
                         cmdArgs.addAll(Arrays.asList(Commandline.translateCommandline(env.expand(jmeterArgs))));
                         cmdArgs.add("-n");

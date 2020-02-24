@@ -187,7 +187,7 @@ public class NmonMonitor extends ResourceMonitor implements BaseDirectoryRelocat
             session = client.startSession();
             int intervalValue = Integer.parseInt(interval);
             cmd = session.exec("/tmp/jenkins-perfci/bin/start_monitor '"
-                    + projectName + "' '" + buildId + "' " + intervalValue);
+                    + projectName + "' '" + buildId + "' " + intervalValue );
             cmd.join(TIMEOUT, TimeUnit.MILLISECONDS);
             session.close();
             if (cmd.getExitStatus() != 0) {

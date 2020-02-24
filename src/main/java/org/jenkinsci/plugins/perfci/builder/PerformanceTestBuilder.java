@@ -163,7 +163,8 @@ public class PerformanceTestBuilder extends Builder implements SimpleBuildStep,S
                 @Override
                 public Object call() throws IOException{
                     // generate a report
-                    PerfchartsNewExecutor perfchartsExecutor = new PerfchartsNewExecutor(env.expand(perfchartsCommand),
+                    PerfchartsNewExecutor perfchartsExecutor = new PerfchartsNewExecutor(
+                            env.expand(!perfchartsCommand.startsWith("docker run") ? perfchartsCommand + " " +env.get("WORKSPACE") + " " + env.get("BUILD_NUMBER") :perfchartsCommand),
                             reportTemplate, workspaceFullPathOnAgent,
                             fallbackTimezoneObj,
                             baseDirForBuild,
@@ -303,9 +304,9 @@ public class PerformanceTestBuilder extends Builder implements SimpleBuildStep,S
     public static final class DescriptorImpl extends BuildStepDescriptor<Builder> {
 
 //        private String defaultPerfchartsCommand = "docker run --net=host --rm -v $WORKSPACE:/data:rw docker-registry.upshift.redhat.com/errata-qe-test/perfci-agent:3.2 perfcharts";
-        private String defaultPerfchartsCommand = "sh openshift/gen_report.sh $WORKSPACE $BUILD_NUMBER";
+        private String defaultPerfchartsCommand = "sh openshift/gen_report.sh";
 //        private String defaultJmeterCommand = "docker run --net=host --rm -v $WORKSPACE:/data:rw -w $PERFCI_WORKING_DIR docker-registry.upshift.redhat.com/errata-qe-test/perfci-agent:3.2 jmeter";
-        private String defaultJmeterCommand = "sh $WORKSPACE/openshift/run_test.sh $WORKSPACE $BUILD_NUMBER";
+        private String defaultJmeterCommand = "sh $WORKSPACE/openshift/run_test.sh";
         private String defaultJmxIncludingPattern = "jmx/*.jmx";
         private String nmonSSHKeys = "\"$HOME\"/.ssh/id_rsa,\"$HOME\"/.ssh/id_dsa";
         private String defultTest ;
