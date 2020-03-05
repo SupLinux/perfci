@@ -18,7 +18,7 @@ simplify the configuration you need to do for all projects.
 
 ### Project configuration
 
-For a project if you don't want to use the perfci plugin, you need to disable  it in the project configuration page.  Select the checkbox labeled "disable all" in the  "Build section".
+You can find "Run Performance test" in Build section.For a project if you don't want to use the perfci plugin, you need to disable  it in the project configuration page.  Select the checkbox labeled "disable all" in the  "Build section".
 
 #### Basic Configuration
 
