@@ -30,7 +30,7 @@ which can add mutiple the Apache jmeter and clone from other project tasks and y
 -   **Resource monitors**  -  This is a Drop-down box
 
 which can add nmon monitor to monitor the machine performace  when you launch a test.you shounld input your ssh key and password to these label （suggest to use Fingerprint way to identify to avoid secret leak）.
--   **Report Generation** -  This part is use perfchart programm to generate report , you should configure Perfcharts command	use the docker way.
+-   **Report Generation** -  This part is using perfchart programm to generate report , you should configure Perfcharts command	use the docker way.
 ### Advanced configuration
 
 To see the advanced configuration for the plugin, first click on
