@@ -56,7 +56,7 @@ pipeline {
         stage('Build') {
             steps {         
                 checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: '']], submoduleCfg: [], userRemoteConfigs: [[name: '', url: '']]])
-                perfTestBuilder performanceTesters:[Jmeter()],resourceMonitors:[Nmon(host: "", name: "", password: "")]
+                perfTestBuilder performanceTesters:[Jmeter()],resourceMonitors:[Nmon(host: "xxx", name: "xxx", password: "xxx")]
             }        
         }
     }
