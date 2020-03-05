@@ -80,7 +80,7 @@ pipeline {
 
 ```
 
--   Advanced build scripts
+-   Advanced build scripts(It supports transfer any number of arbitary parameters)
 
 ``` groovy
 // This scripts is equal to the simple build scripts and you can overwrite any number of params,  all the params are default in programme if you don't overwrite them.
