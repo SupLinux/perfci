@@ -26,6 +26,7 @@ import org.kohsuke.stapler.QueryParameter;
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.regex.Pattern;
 
 /**
  * Created by vfreex on 11/23/15.
@@ -132,7 +133,19 @@ public class JmeterPerformanceTester extends PerformanceTester implements LogDir
                         cmdArgs.add(resultDirObj.toPath().relativize(logFile.toPath()).toString());
                     }
 
-                    listener.getLogger().printf("INFO: Launch Jmeter by executing`" + cmdArgs + "`...\n");
+                    List<String> virArgs =new LinkedList<>();
+                    virArgs.addAll(cmdArgs);
+                    // To avoid console log print password
+                    String pattern = "-Jpassword.*";
+                    for(int i = 0; i < virArgs.size(); i++){
+                        String content = virArgs.get(i);
+                        boolean isMatch = Pattern.matches(pattern, content);
+                        if(isMatch){
+                            virArgs.remove(content);
+                        }
+                    }
+
+                    listener.getLogger().printf("INFO: Launch Jmeter by executing`" + virArgs + "`...\n");
                     ProcessBuilder jmeterProcessBuilder = new ProcessBuilder(cmdArgs);
                     jmeterProcessBuilder.directory(resultDirObj);
                     jmeterProcessBuilder.environment().putAll(env);
